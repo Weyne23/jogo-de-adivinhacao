@@ -13,14 +13,18 @@ import { LettersUsed, type lettersUsedProps } from "./components/LettersUsed"
 
 export function App() {
   const [score, setScore] = useState(0);
-  const [attempts, setAttempts] = useState(0);
   const [letter, setLetter] = useState("");
   const [lettersUsed, setLettersUsed] = useState<lettersUsedProps[]>([]);
   //Caso meu estado tenha um tipo especifico precisa indicar qual vai ser o tipo dele.
   const [challenge, setChallenge] = useState<Challenge | null>(null);
+
+  const ATTEMPTS_MARGIN = 5;
   
   function handleRestartGame() {
-    alert("Reiniciar jogo!");
+    const isConfirmed = window.confirm("Você tem certeza que deseja reiniciar o jogo?");
+
+    if(isConfirmed)
+      startGame();
   }
 
   function startGame() {
@@ -31,7 +35,8 @@ export function App() {
     setChallenge(randomWord);
 
     setLetter("");
-    setAttempts(0);
+    setScore(0);
+    setLettersUsed([]);
   }
 
   function handlerConfirm() {
@@ -45,8 +50,10 @@ export function App() {
     const value = letter.toUpperCase();
     const exists = lettersUsed.find((used) => used.value === value);
 
-    if(exists)
+    if(exists){
+      setLetter("");
       return alert("Você ja tentou essa letra!");
+    }
 
     const hits = challenge.word.toUpperCase().split("").filter((char) => char === value).length;
 
@@ -58,9 +65,31 @@ export function App() {
     setLetter("");
   }
 
+  function endGame(message: string){
+    alert(message);
+    startGame();
+  }
+
   useEffect(() => {
     startGame();
   }, [])
+
+  useEffect(() => {
+    if(!challenge)
+      return;
+
+    setTimeout(() => {
+      if(score === challenge.word.length) {
+        return endGame("Parabéns, voce descobriu a palavra!");
+      }
+
+      const attemptLimit = challenge.word.length + ATTEMPTS_MARGIN;
+
+      if(attemptLimit === lettersUsed.length){
+        return endGame("Você usou todas as tentativas, perdeu!")
+      }
+    }, 200)
+  }, [score, lettersUsed.length])
 
   if(!challenge)
     return;
@@ -69,14 +98,16 @@ export function App() {
     <div className={styles.container}>
       <main>
         {/* "current", "max" e "onRestart" são os parametros do meu componente */}
-        <Header current={attempts} max={10} onRestart={handleRestartGame}/> 
+        <Header current={lettersUsed.length} max={challenge.word.length + ATTEMPTS_MARGIN} onRestart={handleRestartGame}/> 
         <Tip tip={challenge.tip}/>
 
         <div className={styles.word}>
           {
-            challenge.word.split("").map((wordSelected) => (
-              <Letter value={wordSelected} />
-            ))
+            //O segundo parametro de um map é o proprio index do elemento
+            challenge.word.split("").map((letter, index) => {
+              const letterUsed = lettersUsed.find((used) => used.value.toUpperCase() == letter.toUpperCase())
+              return <Letter key={index} value={letterUsed?.value} color={letterUsed ? "correct" : "default"} />
+            })
           }
         </div>
 
