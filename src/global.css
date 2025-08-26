@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 1rem;
+}
+
+body {
+  background-color: #f5f5fa;
+
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+}
+
+button {
+  cursor: pointer;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
