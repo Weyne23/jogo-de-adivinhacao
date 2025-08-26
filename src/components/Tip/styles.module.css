@@ -1,0 +1,24 @@
+.tip {
+    width: 100%;
+    background-color: #ebebfc;
+    color: #4f4fb9;
+    border-radius: .62rem;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    & h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    & p {
+        font-size: 1rem;
+        margin-top: .31rem;
+    }
+
+    & img {
+        height: 2rem;
+    }
+}
