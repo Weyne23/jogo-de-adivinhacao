@@ -17,6 +17,7 @@ export function App() {
   const [lettersUsed, setLettersUsed] = useState<lettersUsedProps[]>([]);
   //Caso meu estado tenha um tipo especifico precisa indicar qual vai ser o tipo dele.
   const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [shake, setShake] = useState(false);
 
   const ATTEMPTS_MARGIN = 5;
   
@@ -63,6 +64,11 @@ export function App() {
     setLettersUsed((preventState) => [...preventState, {value, correct}]);
     setScore(currentScore);
     setLetter("");
+
+    if(!correct) {
+      setShake(true);
+      setTimeout(() => setShake(false), 300)
+    }
   }
 
   function endGame(message: string){
@@ -101,7 +107,7 @@ export function App() {
         <Header current={lettersUsed.length} max={challenge.word.length + ATTEMPTS_MARGIN} onRestart={handleRestartGame}/> 
         <Tip tip={challenge.tip}/>
 
-        <div className={styles.word}>
+        <div className={`${styles.word} ${shake && styles.shake}`}>
           {
             //O segundo parametro de um map é o proprio index do elemento
             challenge.word.split("").map((letter, index) => {
