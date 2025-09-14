@@ -18,7 +18,7 @@ export function Header({ current, max, onRestart }: Props) {
                 </span>
 
                 <button type="button" onClick={onRestart}>
-                    <img src={restart} alt="Icone de reiniciar" />
+                    <img src={restart} alt="Ícone de reiniciar" />
                 </button>
             </header>
         </div>
